@@ -44,15 +44,23 @@ public class KakaoMapService {
     public Map<String, Double> getKakaoCoordinates(double longitude, double latitude) {
         try {
             Map<String, Object> response = convertCoordinates(longitude, latitude);
-            
+
             if (response == null || !response.containsKey("documents")) {
                 return Map.of("x", longitude, "y", latitude);
             }
-            Map<String, Object> documents = ((java.util.List<Map<String, Object>>) response.get("documents")).get(0);
-            
-            double x = Double.parseDouble(documents.get("x").toString());
-            double y = Double.parseDouble(documents.get("y").toString());
-            
+
+            java.util.List<Map<String, Object>> documents =
+                    (java.util.List<Map<String, Object>>) response.get("documents");
+
+            if (documents == null || documents.isEmpty()) {
+                return Map.of("x", longitude, "y", latitude);
+            }
+
+            Map<String, Object> document = documents.get(0);
+
+            double x = Double.parseDouble(document.get("x").toString());
+            double y = Double.parseDouble(document.get("y").toString());
+
             return Map.of("x", x, "y", y);
         } catch (IllegalStateException e) {
             // API 키가 없을 때는 원본 좌표 반환
