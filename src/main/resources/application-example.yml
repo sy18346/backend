@@ -1,0 +1,62 @@
+spring:
+  main:
+    web-application-type: ${WEB_APPLICATION_TYPE}
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO}
+    show-sql: ${JPA_SHOW_SQL}
+    properties:
+      hibernate:
+        dialect: ${JPA_DIALECT}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: ${GOOGLE_SCOPE}
+
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            client-authentication-method: ${KAKAO_CLIENT_AUTH_METHOD}
+            authorization-grant-type: ${KAKAO_GRANT_TYPE}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            scope: ${KAKAO_SCOPE}
+            client-name: ${KAKAO_CLIENT_NAME}
+
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope: ${GITHUB_SCOPE}
+
+        provider:
+          kakao:
+            authorization-uri: ${KAKAO_AUTHORIZATION_URI}
+            token-uri: ${KAKAO_TOKEN_URI}
+            user-info-uri: ${KAKAO_USER_INFO_URI}
+            user-name-attribute: ${KAKAO_USER_NAME_ATTRIBUTE}
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR}
+
+server:
+  port: ${SERVER_PORT}
+
+tourism:
+  serviceKey: ${TOURISM_SERVICE_KEY}
+
+kakao:
+  map:
+    rest-api-key: ${KAKAO_MAP_REST_API_KEY}
+
+secret_key: ${SECRET_KEY}
