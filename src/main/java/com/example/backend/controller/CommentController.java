@@ -44,7 +44,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentRequest request) {
 
-        CommentResponse response = commentService.updateComment(commentId, request);
+        CommentResponse response = commentService.updateComment(postId, commentId, request);
 
         return ResponseEntity.ok(response);
     }
@@ -54,7 +54,7 @@ public class CommentController {
             @PathVariable Long postId,
             @PathVariable Long commentId) {
 
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(postId, commentId);
 
         return ResponseEntity.noContent().build();
     }
@@ -64,7 +64,7 @@ public class CommentController {
             @PathVariable Long postId,
             @PathVariable Long commentId
     ) {
-        commentService.toggleLikeComment(commentId);
+        commentService.toggleLikeComment(postId, commentId);
         return ResponseEntity.ok().build();
     }
 }

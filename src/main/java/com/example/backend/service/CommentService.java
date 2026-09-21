@@ -91,12 +91,11 @@ public class CommentService {
         return comments.map(comment -> mapToResponse(comment, currentUser, false));
     }
 
-    public CommentResponse updateComment(Long commentId, CommentRequest request) {
+    public CommentResponse updateComment(Long postId, Long commentId, CommentRequest request) {
 
         User currentUser = getCurrentUserFromContext();
 
-        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("댓글을 찾을 수 없습니다. (ID: " + commentId + ")"));
+        Comment comment = getCommentInPost(postId, commentId);
 
         if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
             throw new UnauthorizedException("댓글을 수정할 권한이 없습니다.");
@@ -107,12 +106,11 @@ public class CommentService {
         return mapToResponse(comment, currentUser, true);
     }
 
-    public void deleteComment(Long commentId) {
+    public void deleteComment(Long postId, Long commentId) {
 
         User currentUser = getCurrentUserFromContext();
 
-        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("댓글을 찾을 수 없습니다. (ID: " + commentId + ")"));
+        Comment comment = getCommentInPost(postId, commentId);
 
         if (!comment.getUser().getUserId().equals(currentUser.getUserId())) {
             throw new UnauthorizedException("댓글을 삭제할 권한이 없습니다.");
@@ -122,11 +120,10 @@ public class CommentService {
 
     }
 
-    public void toggleLikeComment(Long commentId) {
+    public void toggleLikeComment(Long postId, Long commentId) {
         User currentUser = getCurrentUserFromContext();
 
-        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("댓글을 찾을 수 없습니다. (ID: " + commentId + ")"));
+        Comment comment = getCommentInPost(postId, commentId);
 
         Optional<CommentLike> like = commentLikeRepository.findByUserAndComment(currentUser, comment);
 
@@ -166,6 +163,23 @@ public class CommentService {
         }
 
         return response;
+    }
+
+    private Comment getCommentInPost(Long postId, Long commentId) {
+        Comment comment = commentRepository.findByIdAndDeletedAtIsNull(commentId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "댓글을 찾을 수 없습니다. (ID: " + commentId + ")"
+                        )
+                );
+
+        if (!comment.getPost().getId().equals(postId)) {
+            throw new ResourceNotFoundException(
+                    "해당 게시글의 댓글을 찾을 수 없습니다."
+            );
+        }
+
+        return comment;
     }
 
     private User getCurrentUserFromContext() {
