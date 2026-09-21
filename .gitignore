@@ -6,3 +6,10 @@ target/
 
 # Backup files
 *.backup
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
